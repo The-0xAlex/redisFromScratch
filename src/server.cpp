@@ -17,9 +17,9 @@ static void efail(const char *msg) {
 
 static void do_something(int fd) {
   char rbuf[64] = {};
-  if (read(fd, rbuf, sizeof(rbuf) - 1) < 0) {
+  if (read(fd, rbuf, sizeof(rbuf) - 1) < 0)
     efail("read");
-  }
+
   printf("client says: %s\n", rbuf);
 
   char msg[] = "Hello server.";
@@ -29,9 +29,8 @@ static void do_something(int fd) {
 int main(int argc, const char **argv) {
   // TCP/IPv4 socket
   int fd = socket(AF_INET, SOCK_STREAM, 0);
-  if (fd < 0) {
+  if (fd < 0)
     efail("socket()");
-  }
 
   int val = 1;
   setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &val, sizeof(val));
@@ -42,29 +41,25 @@ int main(int argc, const char **argv) {
   // wildcard address
   addr.sin_addr.s_addr = ntohl(0);
 
-  if (bind(fd, (const struct sockaddr *)&addr, sizeof(addr)) < 0) {
+  if (bind(fd, (const struct sockaddr *)&addr, sizeof(addr)) < 0)
     efail("connect");
-  }
 
-  if (listen(fd, SOMAXCONN) < 0) {
+  if (listen(fd, SOMAXCONN) < 0)
     efail("listen");
-  }
 
   while (true) {
-    // accept
     struct sockaddr_in client_addr = {};
     socklen_t client_addr_len = sizeof(client_addr);
+
+    // accept
     int client_fd =
         accept(fd, (struct sockaddr *)&client_addr, &client_addr_len);
-    if (client_fd < 0) {
+    if (client_fd < 0)
       continue;
-    }
 
     do_something(client_fd);
-
     close(client_fd);
   }
-  // bind
 
   return 0;
 }

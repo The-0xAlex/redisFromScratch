@@ -17,9 +17,8 @@ static void efail(const char *msg) {
 int main() {
   // TCP/IPv4 socket
   int fd = socket(AF_INET, SOCK_STREAM, 0);
-  if (fd < 0) {
+  if (fd < 0)
     efail("socket()");
-  }
 
   struct sockaddr_in addr = {};
   addr.sin_family = AF_INET;
